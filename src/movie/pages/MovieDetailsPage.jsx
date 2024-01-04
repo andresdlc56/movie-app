@@ -9,17 +9,22 @@ import styles from '../css/MovieDetails.module.css';
 
 //Helpers
 import { getMovieById } from '../../helpers';
+import { Spinner } from '../../ui';
 
 
 export const MovieDetailsPage = () => {
 
     const { movieId } = useParams();
 
+    //Bandera para indicar si esta cargando o no
+    const [isLoading, setIsLoading] = useState(true);
+
     const [movie, setMovie] = useState({});
 
     const startGetMovieById = async( id ) => {
         const data = await getMovieById( id );
         setMovie( data );
+        setIsLoading( false );
     }
 
     useEffect(() => {
@@ -29,6 +34,12 @@ export const MovieDetailsPage = () => {
 
     const imageUrl = `https://image.tmdb.org/t/p/w500${ movie.poster_path }`;
     
+    //Validacion mientras carga las movies desde la api
+    if( isLoading ) {
+        return (
+            <Spinner />
+        )
+    }
 
     return (
         <div className={ styles.detailsContainer }>
