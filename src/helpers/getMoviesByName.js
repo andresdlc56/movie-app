@@ -1,12 +1,12 @@
 
-export const getMoviesByName = async( name = "" ) => {
+export const getMoviesByName = async( name = "", page ) => {
     //Parsiando el name recibido
     name = name.trim().toLocaleLowerCase();
 
     if( name.length === 0 ) return []; 
 
     //Consulta
-    const url = `https://api.themoviedb.org/3/search/movie?query=${ name }`;
+    const url = `https://api.themoviedb.org/3/search/movie?query=${ name }&page=${ page }`;
     const resp = await fetch(url, {
         method: 'GET',
         headers: {

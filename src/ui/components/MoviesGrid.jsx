@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 
 //Components
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { MovieCard } from '../../movie';
 
 //Css
@@ -15,58 +16,72 @@ import { Spinner } from '../';
 
 
 
-export const MoviesGrid = () => {
+export const MoviesGrid = ({ search = '' }) => {
 
-    const location = useLocation();
-
+    //Estado para almacenar las movies encontradas 
     const [movies, setMovies] = useState([]);
+    
+    //Estado para indicar si esta cargando las movies o no
     const [isLoading, setIsLoading] = useState(true);
 
-    //Capturando y parsiando los datos obtenidos desde la url
-    const { search = '' } = queryString.parse( location.search );
+    //Estado para indicar la pagina actual
+    const [page, setPage] = useState(1);
+
+    const [hasMore, setHasMore] = useState( true );
+
 
     //Helper para cargar las movies desde la api
-    const startGetMovies = async() => {
+    const startGetMovies = async( page ) => {
         setIsLoading( true );
-        const { results } = await getMovies();
-        setMovies( results );
+        const data = await getMovies( page );
+
+        let prevMovies = [ ...movies ];
+
+        setMovies( prevMovies.concat(data.results) );
+
+        setHasMore( data.page < data.total_pages );        
+
+        //setMovies( data.results );
         setIsLoading( false );
     }
 
     //Helper para cargar las movies de un determinado title 
-    const startGetMoviesByName = async( title ) => {
+    const startGetMoviesByName = async( title, page ) => {
         setIsLoading( true );
-        const { results } = await getMoviesByName( title );
-        setMovies( results );
+        const data = await getMoviesByName( title, page );
+        
+        let prevMovies = [ ...movies ];
+
+        setMovies( prevMovies.concat(data.results) );
+
+        setHasMore( data.page < data.total_pages );
+
         setIsLoading( false );
     }
 
     
+    //Efecto que se va a ejecutar cada vez que el search o la pagina cambie
     useEffect(() => {  
-        if( !search ) {
-            startGetMovies();
-            return
-        }
-        
-        startGetMoviesByName( search );
-        return 
-    }, [search]);
+        (search) ? (startGetMoviesByName( search, page )) : (startGetMovies( page ))
+    }, [search, page]);
     
 
-    //Validacion mientras carga las movies desde la api
-    if( isLoading ) {
-        return (
-            <Spinner />
-        )
-    }
+    
     
     return (
-        <ul className={ styles.moviesGrid }>
-            {
-                movies.map((movie) => (
-                    <MovieCard key={ movie.id } movie={ movie } />
-                ))
-            }
-        </ul>
+        <InfiniteScroll
+            dataLength={movies.length} //This is important field to render the next data
+            next={ () => setPage( prevPage => prevPage + 1 ) }
+            hasMore={ hasMore }
+            loader={ <Spinner /> }
+        >
+            <ul className={ styles.moviesGrid }>
+                {
+                    movies.map((movie) => (
+                        <MovieCard key={ movie.id } movie={ movie } />
+                    ))
+                }
+            </ul>
+        </InfiniteScroll>
     )
 }

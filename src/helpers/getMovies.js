@@ -1,5 +1,5 @@
-export const getMovies = async() => {
-    const url = 'https://api.themoviedb.org/3/discover/movie';
+export const getMovies = async( page ) => {
+    const url = `https://api.themoviedb.org/3/discover/movie?page=${ page }`;
     const resp = await fetch(url, {
         method: 'GET',
         headers: {
