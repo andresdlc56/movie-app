@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import queryString from 'query-string';
 
 //Components
 import { MovieCard } from '../../movie';
@@ -7,26 +9,48 @@ import { MovieCard } from '../../movie';
 import styles from '../css/MoviesGrid.module.css';
 
 //Importando data
-import { getMovies } from '../../helpers';
+import { getMovies, getMoviesByName } from '../../helpers';
 import { Spinner } from '../';
+
+
 
 
 export const MoviesGrid = () => {
 
-    const [movies, setMovies] = useState([]);
+    const location = useLocation();
 
+    const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
+    //Capturando y parsiando los datos obtenidos desde la url
+    const { search = '' } = queryString.parse( location.search );
 
     //Helper para cargar las movies desde la api
     const startGetMovies = async() => {
+        setIsLoading( true );
         const { results } = await getMovies();
         setMovies( results );
         setIsLoading( false );
     }
+
+    //Helper para cargar las movies de un determinado title 
+    const startGetMoviesByName = async( title ) => {
+        setIsLoading( true );
+        const { results } = await getMoviesByName( title );
+        setMovies( results );
+        setIsLoading( false );
+    }
+
     
-    useEffect(() => {
-        startGetMovies();
-    }, []);
+    useEffect(() => {  
+        if( !search ) {
+            startGetMovies();
+            return
+        }
+        
+        startGetMoviesByName( search );
+        return 
+    }, [search]);
     
 
     //Validacion mientras carga las movies desde la api
