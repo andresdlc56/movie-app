@@ -34,6 +34,7 @@ export const MoviesGrid = ({ search = '' }) => {
     const startGetMovies = async( page ) => {
         setIsLoading( true );
         const data = await getMovies( page );
+        //console.log( data.results );
 
         let prevMovies = [ ...movies ];
 
@@ -46,10 +47,11 @@ export const MoviesGrid = ({ search = '' }) => {
     }
 
     //Helper para cargar las movies de un determinado title 
-    const startGetMoviesByName = async( title, page ) => {
+    const startGetMoviesByName = async( title, page = 1 ) => {
         setIsLoading( true );
         const data = await getMoviesByName( title, page );
-        
+        //console.log( data.results );
+
         let prevMovies = [ ...movies ];
 
         setMovies( prevMovies.concat(data.results) );

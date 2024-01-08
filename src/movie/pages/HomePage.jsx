@@ -6,6 +6,8 @@ import queryString from "query-string";
 import { MoviesGrid } from "../../ui";
 import { Search } from "../";
 
+//Custom Hooks
+import { useDebounce } from "../../hooks";
 
 
 export const HomePage = () => {
@@ -15,11 +17,13 @@ export const HomePage = () => {
     //Capturando y parsiando los datos obtenidos desde la url
     const { search = '' } = queryString.parse( location.search );
 
+    const debounceSearch = useDebounce(search, 1000);
+
     return (
         <>
             <Search />
 
-            <MoviesGrid key={ search } search={ search } />
+            <MoviesGrid key={ debounceSearch } search={ debounceSearch } />
         </>
         
     )
