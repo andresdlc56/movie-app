@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+
 
 //Components
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { MovieCard } from '../../movie';
+import { Empty, Spinner } from '../';
 
 //Css
 import styles from '../css/MoviesGrid.module.css';
 
 //Importando data
 import { getMovies, getMoviesByName } from '../../helpers';
-import { Spinner } from '../';
+
 
 
 
@@ -68,7 +68,9 @@ export const MoviesGrid = ({ search = '' }) => {
     }, [search, page]);
     
 
-    
+    if( !isLoading && movies.length === 0 ) {
+        return <Empty />
+    }
     
     return (
         <InfiniteScroll

@@ -44,6 +44,8 @@ export const Search = () => {
                 <input
                     className={ styles.searchInput } 
                     type="text" 
+                    aria-label="Search Movies"
+                    placeholder="Title"
                     value={ searchText }
                     onChange={ (e) => {
                         //Capturando el valor del input 
