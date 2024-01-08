@@ -11,6 +11,9 @@ import styles from '../css/MovieDetails.module.css';
 import { getMovieById } from '../../helpers';
 import { Spinner } from '../../ui';
 
+//Image
+import placeholder from "../../placeholder.png";
+
 
 export const MovieDetailsPage = () => {
 
@@ -32,7 +35,9 @@ export const MovieDetailsPage = () => {
     }, []);
 
 
-    const imageUrl = `https://image.tmdb.org/t/p/w500${ movie.poster_path }`;
+    const imageUrl = (movie.poster_path) 
+        ? `https://image.tmdb.org/t/p/w300${ movie.poster_path }` 
+        : placeholder
     
     //Validacion mientras carga las movies desde la api
     if( isLoading ) {

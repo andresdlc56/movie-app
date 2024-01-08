@@ -1,11 +1,18 @@
 
 import { Link } from "react-router-dom";
+
+//Css
 import styles from "../css/MovieCard.module.css";
+
+//Image
+import placeholder from "../../placeholder.png";
 
 
 export const MovieCard = ({ movie }) => {
 
-    const imageUrl = `https://image.tmdb.org/t/p/w300${ movie.poster_path }`;
+    const imageUrl = (movie.poster_path) 
+        ? `https://image.tmdb.org/t/p/w300${ movie.poster_path }` 
+        : placeholder
 
     return (
         <li className={ styles.movieCard }>

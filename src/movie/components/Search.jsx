@@ -1,4 +1,4 @@
-//import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import queryString from 'query-string';
 import { FaSearch } from "react-icons/fa";
@@ -15,12 +15,11 @@ export const Search = () => {
     const navigate = useNavigate();
     const location = useLocation();
     
-    //const [searchText, setSearchText] = useState('');
+    const [searchText, setSearchText] = useState('');
 
     //Capturando y parsiando los datos obtenidos desde la url
     const { search = '' } = queryString.parse( location.search );
     
-    /*
     useEffect(() => {
         if( !search ) {
             setSearchText('');
@@ -29,13 +28,13 @@ export const Search = () => {
 
         return
     }, [search])
-    */
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
         
         //Agregar datos de busqueda a la url
-        //navigate(`/?search=${ searchText }`);
+        navigate(`/?search=${ searchText }`);
     }
 
     return (
@@ -45,11 +44,11 @@ export const Search = () => {
                 <input
                     className={ styles.searchInput } 
                     type="text" 
-                    value={ search }
+                    value={ searchText }
                     onChange={ (e) => {
                         //Capturando el valor del input 
                         const value = e.target.value
-                        //setSearchText( value );
+                        setSearchText( value );
 
                         //Agregar datos de busqueda a la url
                         navigate(`/?search=${ value }`);
